@@ -1,22 +1,10 @@
 import * as fs from "fs";
 import * as path from "path";
 import { ParserError } from "./errors/ParserError";
+import { TokenKeywords } from "./TokenKeywords";
 
 export default class Tokenizer {
   program: string;
-  literals: Array<string> = [
-    "Start",
-    "Events:",
-    "every",
-    "and",
-    "on",
-    "all day",
-    "from",
-    "at",
-    "with",
-    "Done",
-    "End"
-  ];
   tokens: string[] = [];
   currentTokenIdx: number = 0;
   line: number = 1;
@@ -38,7 +26,7 @@ export default class Tokenizer {
     let tokenizedProgram = this.program.replace(/\r?\n|\r/g, "_NEWLINE_");
 
     // Add underscores around each literal
-    this.literals.forEach(literal => {
+    Object.values(TokenKeywords).forEach(literal => {
       tokenizedProgram = tokenizedProgram.replace(literal, `_${literal}_`);
     });
 
