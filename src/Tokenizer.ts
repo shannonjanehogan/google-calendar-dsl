@@ -43,10 +43,11 @@ export default class Tokenizer {
     });
 
     // Remove extra spacing around each token
-    tokenizedProgram = tokenizedProgram.replace(/[ ]+/g, "");
+    tokenizedProgram = tokenizedProgram.replace(/[ ]{2,}/g, " ");
 
     // Create token list by spliting on underscores
     let tokenList = tokenizedProgram.split(/[_]+/g);
+    tokenList = tokenList.map(token => token.trim());
 
     // Remove first and last items from token list (they are empty strings)
     tokenList = tokenList.slice(1, tokenList.length - 1);
