@@ -1,27 +1,38 @@
 import Node from "../Node";
 import CalTypes from "./CalTypes";
 import Events from "./Events";
-import { tokenizer } from "../Tokenizer";
+import Tokenizer from "../Tokenizer";
 
 export default class Program extends Node {
-  let calTypes = new Array<CalTypes>;
+  calTypes: CalTypes[] = [];
 
-  public parse(): void {
+  parse(tokenizer: Tokenizer): void {
    tokenizer.getAndCheckNext("Start");
    while (!tokenizer.checkToken("End")) {
-     let calType: CalType = null;
+     let calType: CalTypes = null;
      if (tokenizer.checkToken("Events:")) {
        calType = new Events();
      }
+     calType.parse();
+     this.calTypes.push(calType);
    }
-   calType.parse();
-   calTypes.add(calType);
-   Calendar.createCalendarFile();
   }
 
-  public nameCheck(): void {
-    for (let calType of calTypes) {
+  evaluate(): void {
+    for (let calType of this.calTypes) {
+      calType.evaluate();
+    }
+  }
+
+  nameCheck(): void {
+    for (let calType of this.calTypes) {
       calType.nameCheck();
+    }
+  }
+
+  typeCheck(): void {
+    for (let calType of this.calTypes) {
+      calType.typeCheck();
     }
   }
 }

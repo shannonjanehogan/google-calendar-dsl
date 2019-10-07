@@ -1,27 +1,59 @@
-import DayOfWeek from "./DayOfWeek";
-import Date from "./Date";
+import Node from "../Node";
+import Tokenizer from "../Tokenizer";
 
-class Event extends CalTypes {
-  event: String;
-  calTypes: Array<CalTypes>;
+export default class Event extends Node {
+  title: string = "";
+  repeating: boolean = false;
+  daysOfWeek: string[] = [];
+  date: string = "";
+  allDay: boolean = false;
+  fromTime: string = "";
+  toTime: string = "";
+  location: string = "";
+  guests: string[] = [];
 
-  parse(): void {
-    while (!tokenizer.checkToken(";")) {
-      eventName = tokenizer.getNext();
-      if (tokenizer.checkToken("every") || tokenizer.checkToken("and")) {
-        calTypes.add(new DayOfWeek());
-      }
-      if (tokenizer.checkToken("on")) {
-        calTypes.add(new Date());
-      }
-      if (tokenizer.checkToken("from") || tokenizer.checkToken("to")) {
-        calTypes.add(new Time());
-      }
+  parse(tokenizer: Tokenizer): void {
+    this.title = tokenizer.getNext();
+    if (tokenizer.getAndCheckNext("every")) {
+      this.repeating = true;
+      do {
+        let dayOfWeek: string = tokenizer.getNext();
+        this.daysOfWeek.push(dayOfWeek);
+      } while (tokenizer.getAndCheckNext("and"))
+    } else if (tokenizer.getAndCheckNext("on")) {
+      this.repeating = false;
+      this.date = tokenizer.getNext();
     }
-    for (calType in CalTypes) {
-      calType.parse();
+
+    if (tokenizer.getAndCheckNext("all day")) {
+      this.allDay = true;
+    } else if (tokenizer.getAndCheckNext("from")) {
+      this.allDay = false;
+      this.fromTime = tokenizer.getNext();
+      tokenizer.getAndCheckNext("to");
+      this.toTime = tokenizer.getNext();
+    }
+
+    // stub for locations
+    if (tokenizer.getAndCheckNext("at")) {
+
+    }
+
+    // stub for guests
+    if (tokenizer.getAndCheckNext("with")) {
+
     }
   }
 
-  // TODO figure out what to do with typeCheck() and nameCheck() methods
+  evaluate(): void {
+    // TODO
+  }
+
+  nameCheck(): void {
+    // TODO
+  }
+
+  typeCheck(): void {
+    // TODO
+  }
 }

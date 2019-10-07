@@ -1,19 +1,35 @@
-class Events extends CalTypes {
-  events: String;
-  calTypes: Array<CalTypes>;
- // name: String; // TODO should be renamed/figure out what to do here
+import Tokenizer from "../Tokenizer";
+import Event from "./Event";
 
-  parse(): void {
+export default class Events extends Node {
+  events: Event[] = [];
+  
+  parse(tokenizer: Tokenizer): void {
+    tokenizer.getAndCheckNext("Events:")
     while (!tokenizer.checkToken("Done")) {
-      let calType: CalType = null;
-      if (tokenizer.checkToken("Events:")) {
-        calType = new Event();
-      }
+      let event: Event = new Event();
+      event.parse(tokenizer);
+      this.events.push(event);
     }
-    calType.parse();
-    calTypes.add(calType);
-    Calendar.createCalendarFile();
+    tokenizer.getAndCheckNext("Done");
   }
 
-  // TODO figure out what to do with typeCheck() and nameCheck() methods
+  evaluate(): void {
+    for (let event of this.events) {
+      event.evaluate();
+    }
+  }
+
+  nameCheck(): void {
+    for (let event of this.events) {
+      event.nameCheck();
+    }
+  }
+
+  typeCheck(): void {
+    for (let event of this.events) {
+      event.typeCheck();
+    }
+  }
+
 }
