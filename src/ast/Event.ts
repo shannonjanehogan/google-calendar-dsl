@@ -11,7 +11,7 @@ export default class Event extends Node {
     "Thursday",
     "Friday",
     "Saturday"
-  ]
+  ];
   title: string = "";
   repeating: boolean = false;
   daysOfWeek: string[] = [];
@@ -27,7 +27,9 @@ export default class Event extends Node {
     let currentLine = tokenizer.getLine();
     let token = tokenizer.pop();
     if (token === null) {
-      throw new ParserError(`Error on line ${currentLine}: expected an event title`);
+      throw new ParserError(
+        `Error on line ${currentLine}: expected an event title`
+      );
     }
     this.title = token;
 
@@ -38,7 +40,9 @@ export default class Event extends Node {
       this.repeating = true;
       token = tokenizer.pop();
       if (token === null || !Event.validDays.includes(token)) {
-        throw new ParserError(`Error on line ${currentLine}: expected a day of the week`);
+        throw new ParserError(
+          `Error on line ${currentLine}: expected a day of the week`
+        );
       }
       let dayOfWeek: string = token;
       this.daysOfWeek.push(dayOfWeek);
@@ -50,7 +54,9 @@ export default class Event extends Node {
         currentLine = tokenizer.getLine();
         token = tokenizer.pop();
         if (token === null || !Event.validDays.includes(token)) {
-          throw new ParserError(`Error on line ${currentLine}: expected a day of the week`)
+          throw new ParserError(
+            `Error on line ${currentLine}: expected a day of the week`
+          );
         }
       }
     } else if (token === "on") {
@@ -62,7 +68,9 @@ export default class Event extends Node {
       }
       this.date = token;
     } else {
-      throw new ParserError(`Error on line ${currentLine}: expected keyword [every] or [on] but got [${token}]`);
+      throw new ParserError(
+        `Error on line ${currentLine}: expected keyword [every] or [on] but got [${token}]`
+      );
     }
 
     // Get what should be the start and end time of the event
@@ -75,36 +83,42 @@ export default class Event extends Node {
       currentLine = tokenizer.getLine();
       token = tokenizer.pop();
       if (token === null) {
-        throw new ParserError(`Error on line ${currentLine}: expected a start time`);
+        throw new ParserError(
+          `Error on line ${currentLine}: expected a start time`
+        );
       }
       this.fromTime = token;
       currentLine = tokenizer.getLine();
       token = tokenizer.pop();
       if (token !== "to") {
-        throw new ParserError(`Error on line ${currentLine}: expected keyword [to] but got [${token}]`);
+        throw new ParserError(
+          `Error on line ${currentLine}: expected keyword [to] but got [${token}]`
+        );
       }
       currentLine = tokenizer.getLine();
       token = tokenizer.pop();
       if (token === null) {
-        throw new ParserError(`Error on line ${currentLine}: expected a start time`);
+        throw new ParserError(
+          `Error on line ${currentLine}: expected a start time`
+        );
       }
       this.toTime = token;
     } else {
-      throw new ParserError(`Error on line ${currentLine}: expected keyword [all day] or [from] but got [${token}]`);
+      throw new ParserError(
+        `Error on line ${currentLine}: expected keyword [all day] or [from] but got [${token}]`
+      );
     }
 
     // stub for locations
     currentLine = tokenizer.getLine();
     token = tokenizer.top();
     if (token === "at") {
-      
     }
 
     // stub for guests
     currentLine = tokenizer.getLine();
     token = tokenizer.top();
     if (token === "with") {
-      
     }
   }
 
