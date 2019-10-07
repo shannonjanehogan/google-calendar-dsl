@@ -1,5 +1,6 @@
 import Node from "../Node";
 import Tokenizer from "../Tokenizer";
+import { ParserError } from "../errors/ParserError";
 
 export default class Event extends Node {
   title: string = "";
@@ -13,35 +14,100 @@ export default class Event extends Node {
   guests: string[] = [];
 
   parse(tokenizer: Tokenizer): void {
-    this.title = tokenizer.getNext();
-    if (tokenizer.getAndCheckNext("every")) {
+    // Get what should be the title of the event
+    let currentLine = tokenizer.getLine();
+    let token = tokenizer.pop();
+    if (token === null) {
+      throw new ParserError(`Error on line ${currentLine}: expected an event title`);
+    }
+    this.title = token;
+
+    // Get what should be the date of the event
+    currentLine = tokenizer.getLine();
+    token = tokenizer.pop();
+    if (token === "every") {
       this.repeating = true;
-      do {
-        let dayOfWeek: string = tokenizer.getNext();
-        this.daysOfWeek.push(dayOfWeek);
-      } while (tokenizer.getAndCheckNext("and"))
-    } else if (tokenizer.getAndCheckNext("on")) {
+      token = tokenizer.pop();
+      if (token === null) {
+        throw new ParserError(`Error on line ${currentLine}: expected a day of the week`);
+      }
+      let dayOfWeek: string = token;
+      this.daysOfWeek.push(dayOfWeek);
+      token = tokenizer.top();
+      // loop over ("and" DAYOFWEEK)* tokens
+      // TODO: clean this up
+      while (token === "and") {
+        tokenizer.pop();
+        currentLine = tokenizer.getLine();
+        token = tokenizer.pop();
+        switch (token) {
+          case "Sunday":
+          case "Monday":
+          case "Tuesday":
+          case "Wednesday":
+          case "Thursday":
+          case "Friday":
+          case "Saturday":
+            let dayOfWeek = token;
+            this.daysOfWeek.push(dayOfWeek);
+            token = tokenizer.top();
+            break;
+          default:
+            throw new ParserError(`Error on line ${currentLine}: expected a day of the week`)
+        }
+      }
+    } else if (token === "on") {
       this.repeating = false;
-      this.date = tokenizer.getNext();
+      currentLine = tokenizer.getLine();
+      token = tokenizer.pop();
+      if (token === null) {
+        throw new ParserError(`Error on line ${currentLine}: expected a date`);
+      }
+      this.date = token;
+    } else {
+      throw new ParserError(`Error on line ${currentLine}: expected keyword [every] or [on] but got [${token}]`);
     }
 
-    if (tokenizer.getAndCheckNext("all day")) {
+    // Get what should be the start and end time of the event
+    currentLine = tokenizer.getLine();
+    token = tokenizer.pop();
+    if (token === "all day") {
       this.allDay = true;
-    } else if (tokenizer.getAndCheckNext("from")) {
+    } else if (token === "from") {
       this.allDay = false;
-      this.fromTime = tokenizer.getNext();
-      tokenizer.getAndCheckNext("to");
-      this.toTime = tokenizer.getNext();
+      currentLine = tokenizer.getLine();
+      token = tokenizer.pop();
+      if (token === null) {
+        throw new ParserError(`Error on line ${currentLine}: expected a start time`);
+      }
+      this.fromTime = token;
+      currentLine = tokenizer.getLine();
+      token = tokenizer.pop();
+      if (token !== "to") {
+        throw new ParserError(`Error on line ${currentLine}: expected keyword [to] but got [${token}]`);
+      }
+      currentLine = tokenizer.getLine();
+      token = tokenizer.pop();
+      if (token === null) {
+        throw new ParserError(`Error on line ${currentLine}: expected a start time`);
+      }
+      this.toTime = token;
+    } else {
+      throw new ParserError(`Error on line ${currentLine}: expected keyword [all day] or [from] but got [${token}]`);
     }
 
     // stub for locations
-    if (tokenizer.getAndCheckNext("at")) {
-
+    currentLine = tokenizer.getLine();
+    token = tokenizer.top();
+    if (token === "at") {
+      
     }
 
     // stub for guests
-    if (tokenizer.getAndCheckNext("with")) {
-
+    currentLine = tokenizer.getLine();
+    token = tokenizer.top();
+    if (token === "with") {
+      
     }
   }
 

@@ -1,4 +1,5 @@
 import Tokenizer from "./Tokenizer";
+import { ParserError } from "./errors/ParserError";
 
 export default abstract class Node {
   names: string[] = [];
