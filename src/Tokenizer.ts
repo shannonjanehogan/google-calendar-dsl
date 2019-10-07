@@ -34,8 +34,8 @@ export default class Tokenizer {
   }
 
   private tokenize() {
-    // Remove all newlines
-    let tokenizedProgram = this.program.replace(/\r?\n|\r/g, "");
+    // Repalce all new lines with keyword
+    let tokenizedProgram = this.program.replace(/\r?\n|\r/g, "_NEWLINE_");
 
     // Add underscores around each literal
     this.literals.forEach(literal => {
@@ -61,7 +61,7 @@ export default class Tokenizer {
     // TODO: This code has yet to be verified
     if (this.currentTokenIdx < this.tokens.length) {
       // ignore blank lines
-      while ("NEW_LINE" === this.tokens[this.currentTokenIdx]) {
+      while ("NEWLINE" === this.tokens[this.currentTokenIdx]) {
         this.currentTokenIdx += 1;
         this.line += 1;
         this.column = 0;
