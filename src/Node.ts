@@ -1,10 +1,11 @@
 import Tokenizer from "./Tokenizer";
+import { ParserError } from "./errors/ParserError";
 
 export default abstract class Node {
-  let names = new Array<String>;
-  let types = new Map<String, String>;
-  let tokenizer = Tokenizer.getTokenizer();
-  abstract parse();
-  abstract evaluate();
-  abstract nameCheck();
+  names: string[] = [];
+  types: object = {};
+  abstract parse(tokenizer: Tokenizer): void;
+  abstract evaluate(): void;
+  abstract nameCheck(): void;
+  abstract typeCheck(): void;
 }
