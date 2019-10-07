@@ -3,6 +3,15 @@ import Tokenizer from "../Tokenizer";
 import { ParserError } from "../errors/ParserError";
 
 export default class Event extends Node {
+  static readonly validDays: string[] = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday"
+  ]
   title: string = "";
   repeating: boolean = false;
   daysOfWeek: string[] = [];
@@ -28,7 +37,7 @@ export default class Event extends Node {
     if (token === "every") {
       this.repeating = true;
       token = tokenizer.pop();
-      if (token === null) {
+      if (token === null || !Event.validDays.includes(token)) {
         throw new ParserError(`Error on line ${currentLine}: expected a day of the week`);
       }
       let dayOfWeek: string = token;
@@ -40,20 +49,8 @@ export default class Event extends Node {
         tokenizer.pop();
         currentLine = tokenizer.getLine();
         token = tokenizer.pop();
-        switch (token) {
-          case "Sunday":
-          case "Monday":
-          case "Tuesday":
-          case "Wednesday":
-          case "Thursday":
-          case "Friday":
-          case "Saturday":
-            let dayOfWeek = token;
-            this.daysOfWeek.push(dayOfWeek);
-            token = tokenizer.top();
-            break;
-          default:
-            throw new ParserError(`Error on line ${currentLine}: expected a day of the week`)
+        if (token === null || !Event.validDays.includes(token)) {
+          throw new ParserError(`Error on line ${currentLine}: expected a day of the week`)
         }
       }
     } else if (token === "on") {
