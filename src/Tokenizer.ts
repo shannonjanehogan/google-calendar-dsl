@@ -10,6 +10,7 @@ export default class Tokenizer {
     "every",
     "and",
     "on",
+    "to",
     "all day",
     "from",
     "at",
@@ -34,19 +35,22 @@ export default class Tokenizer {
   }
 
   private tokenize() {
-    // Repalce all new lines with keyword
-    let tokenizedProgram = this.program.replace(/\r?\n|\r/g, "_NEWLINE_");
+    // Replace all new lines with keyword
+    let tokenizedProgram = this.program.replace(/\r?\n|\r/g, "$$$$NEWLINE$$$$");
 
-    // Add underscores around each literal
+    // Add double dollar signs around each keyword
     this.literals.forEach(literal => {
-      tokenizedProgram = tokenizedProgram.replace(literal, `_${literal}_`);
+      tokenizedProgram = tokenizedProgram.replace(new RegExp(`\\b${literal}\\b(?=([^"]*"[^"]*")*[^"]*$)`, "g"), `$$$$${literal}$$$$`);
     });
 
     // Remove extra spacing around each token
     tokenizedProgram = tokenizedProgram.replace(/[ ]{2,}/g, " ");
 
-    // Create token list by spliting on underscores
-    let tokenList = tokenizedProgram.split(/[_]+/g);
+    // Remove double quote marks that escaped strings
+    tokenizedProgram = tokenizedProgram.replace(/"/g, "");
+
+    // Create token list by spliting on double (or more) dollar signs
+    let tokenList = tokenizedProgram.split(/[\$]{2,}/g);
     tokenList = tokenList.map(token => token.trim());
 
     // Remove first and last items from token list (they are empty strings)
