@@ -38,7 +38,7 @@ export default class Event extends Node {
     if (token === TokenKeywords.EVERY) {
       this.repeating = true;
       token = tokenizer.pop();
-      if (token === null || !Event.validDays.includes(token)) {
+      if (token === null) {
         throw new ParserError("expected a day of the week", this.lineNumber);
       }
       let dayOfWeek: string = token;
@@ -49,7 +49,7 @@ export default class Event extends Node {
       while (token === TokenKeywords.AND) {
         tokenizer.pop();
         token = tokenizer.pop();
-        if (token === null || !Event.validDays.includes(token)) {
+        if (token === null) {
           throw new ParserError("expected a day of the week", this.lineNumber);
         }
         this.daysOfWeek.push(token);
@@ -118,6 +118,16 @@ export default class Event extends Node {
   }
 
   typeCheck(): void {
-    // TODO
+    this.daysOfWeek.forEach(dayOfWeek => {
+      if (!Event.validDays.includes(dayOfWeek)) {
+        throw new TypeCheckError(
+          {
+            expected: "a valid day of the week",
+            actual: dayOfWeek
+          },
+          this.lineNumber
+        );
+      }
+    });
   }
 }
