@@ -1,5 +1,7 @@
 export class TypeCheckError extends Error {
-    constructor(message: string) {
-        super(message);
-    }
+  constructor(error: { expected: string; actual: string }, lineNumber: number) {
+    super(
+      `Error on line ${lineNumber}: expected ${error.expected} but got ${error.actual}`
+    );
+  }
 }

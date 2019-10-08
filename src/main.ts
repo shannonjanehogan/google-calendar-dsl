@@ -6,5 +6,5 @@ let program = new Program();
 
 program.parse(tokenizer);
 // program.nameCheck();
-// program.typeCheck();
+program.typeCheck();
 // program.evaluate();

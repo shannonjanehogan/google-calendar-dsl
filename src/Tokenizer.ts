@@ -27,7 +27,10 @@ export default class Tokenizer {
 
     // Add double dollar signs around each keyword
     Object.values(TokenKeywords).forEach(literal => {
-      tokenizedProgram = tokenizedProgram.replace(new RegExp(`\\b${literal}\\b(?=([^"]*"[^"]*")*[^"]*$)`, "g"), `$$$$${literal}$$$$`);
+      tokenizedProgram = tokenizedProgram.replace(
+        new RegExp(`\\b${literal}\\b(?=([^"]*"[^"]*")*[^"]*$)`, "g"),
+        `$$$$${literal}$$$$`
+      );
     });
 
     // Remove extra spacing around each token
