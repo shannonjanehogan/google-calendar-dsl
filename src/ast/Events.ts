@@ -2,6 +2,7 @@ import Tokenizer from "../Tokenizer";
 import Event from "./Event";
 import Node from "../Node";
 import { ParserError } from "../errors/ParserError";
+import { TokenKeywords } from "../TokenKeywords";
 
 export default class Events extends Node {
   events: Event[] = [];
@@ -9,21 +10,21 @@ export default class Events extends Node {
   parse(tokenizer: Tokenizer): void {
     let currentLine = tokenizer.getLine();
     let token = tokenizer.pop();
-    if (token !== "Events:") {
+    if (token !== TokenKeywords.EVENTS) {
       throw new ParserError(
-        `Error at line ${currentLine}: expected keyword [Events:] but got [${token}]`
+        `Error at line ${currentLine}: expected keyword [${TokenKeywords.EVENTS}] but got [${token}]`
       );
     }
-    while (tokenizer.top() !== "Done") {
+    while (tokenizer.top() !== TokenKeywords.DONE) {
       let event: Event = new Event();
       event.parse(tokenizer);
       this.events.push(event);
     }
     currentLine = tokenizer.getLine();
     token = tokenizer.pop();
-    if (token !== "Done") {
+    if (token !== TokenKeywords.DONE) {
       throw new ParserError(
-        `Error at line ${currentLine}: expected keyword [Done] but got [${token}]`
+        `Error at line ${currentLine}: expected keyword [${TokenKeywords.DONE}] but got [${token}]`
       );
     }
 
