@@ -1,23 +1,10 @@
 import * as fs from "fs";
 import * as path from "path";
 import { ParserError } from "./errors/ParserError";
+import { TokenKeywords } from "./TokenKeywords";
 
 export default class Tokenizer {
   program: string;
-  literals: Array<string> = [
-    "Start",
-    "Events:",
-    "every",
-    "and",
-    "on",
-    "to",
-    "all day",
-    "from",
-    "at",
-    "with",
-    "Done",
-    "End"
-  ];
   tokens: string[] = [];
   currentTokenIdx: number = 0;
   line: number = 1;
@@ -39,7 +26,7 @@ export default class Tokenizer {
     let tokenizedProgram = this.program.replace(/\r?\n|\r/g, "$$$$NEWLINE$$$$");
 
     // Add double dollar signs around each keyword
-    this.literals.forEach(literal => {
+    Object.values(TokenKeywords).forEach(literal => {
       tokenizedProgram = tokenizedProgram.replace(new RegExp(`\\b${literal}\\b(?=([^"]*"[^"]*")*[^"]*$)`, "g"), `$$$$${literal}$$$$`);
     });
 
