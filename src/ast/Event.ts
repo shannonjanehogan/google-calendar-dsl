@@ -3,6 +3,7 @@ import moment from 'moment';
 import Node from "../Node";
 import Tokenizer from "../Tokenizer";
 import { ParserError } from "../errors/ParserError";
+import { TypeCheckError } from "../errors/TypeCheckError";
 import { TokenKeywords } from "../TokenKeywords";
 
 export default class Event extends Node {
@@ -27,25 +28,20 @@ export default class Event extends Node {
 
   parse(tokenizer: Tokenizer): void {
     // Get what should be the title of the event
-    let currentLine = tokenizer.getLine();
+    this.lineNumber = tokenizer.getLine();
     let token = tokenizer.pop();
     if (token === null) {
-      throw new ParserError(
-        `Error on line ${currentLine}: expected an event title`
-      );
+      throw new ParserError("expected an event title", this.lineNumber);
     }
     this.title = token;
 
     // Get what should be the date of the event
-    currentLine = tokenizer.getLine();
     token = tokenizer.pop();
     if (token === TokenKeywords.EVERY) {
       this.repeating = true;
       token = tokenizer.pop();
-      if (token === null || !Event.validDays.includes(token)) {
-        throw new ParserError(
-          `Error on line ${currentLine}: expected a day of the week`
-        );
+      if (token === null) {
+        throw new ParserError("expected a day of the week", this.lineNumber);
       }
       let dayOfWeek: string = token;
       this.daysOfWeek.push(dayOfWeek);
@@ -54,74 +50,62 @@ export default class Event extends Node {
       // TODO: clean this up
       while (token === TokenKeywords.AND) {
         tokenizer.pop();
-        currentLine = tokenizer.getLine();
         token = tokenizer.pop();
-        if (token === null || !Event.validDays.includes(token)) {
-          throw new ParserError(
-            `Error on line ${currentLine}: expected a day of the week`
-          );
+        if (token === null) {
+          throw new ParserError("expected a day of the week", this.lineNumber);
         }
-        dayOfWeek = token;
-        this.daysOfWeek.push(dayOfWeek);
+        this.daysOfWeek.push(token);
       }
     } else if (token === TokenKeywords.ON) {
       this.repeating = false;
-      currentLine = tokenizer.getLine();
       token = tokenizer.pop();
       if (token === null) {
-        throw new ParserError(`Error on line ${currentLine}: expected a date`);
+        throw new ParserError("expected a date", this.lineNumber);
       }
       this.date = token;
     } else {
       throw new ParserError(
-        `Error on line ${currentLine}: expected keyword [${TokenKeywords.EVERY}] or [${TokenKeywords.ON}] but got [${token}]`
+        `expected keyword [${TokenKeywords.EVERY}] or [${TokenKeywords.ON}] but got [${token}]`,
+        this.lineNumber
       );
     }
 
     // Get what should be the start and end time of the event
-    currentLine = tokenizer.getLine();
     token = tokenizer.pop();
     if (token === TokenKeywords.ALL_DAY) {
       this.allDay = true;
     } else if (token === TokenKeywords.FROM) {
       this.allDay = false;
-      currentLine = tokenizer.getLine();
       token = tokenizer.pop();
       if (token === null) {
-        throw new ParserError(
-          `Error on line ${currentLine}: expected a start time`
-        );
+        throw new ParserError("expected a start time", this.lineNumber);
       }
       this.fromTime = token;
-      currentLine = tokenizer.getLine();
       token = tokenizer.pop();
       if (token !== TokenKeywords.TO) {
         throw new ParserError(
-          `Error on line ${currentLine}: expected keyword [${TokenKeywords.TO}] but got [${token}]`
+          `expected keyword [${TokenKeywords.TO}] but got [${token}]`,
+          this.lineNumber
         );
       }
-      currentLine = tokenizer.getLine();
       token = tokenizer.pop();
       if (token === null) {
-        throw new ParserError(
-          `Error on line ${currentLine}: expected an end time`
-        );
+        throw new ParserError("expected an end time time", this.lineNumber);
       }
       this.toTime = token;
     } else {
       throw new ParserError(
-        `Error on line ${currentLine}: expected keyword [${TokenKeywords.ALL_DAY}] or [${TokenKeywords.FROM}] but got [${token}]`
+        `expected keyword [${TokenKeywords.ALL_DAY}] or [${TokenKeywords.FROM}] but got [${token}]`,
+        this.lineNumber
       );
     }
 
     // stub for locations
-    currentLine = tokenizer.getLine();
     token = tokenizer.top();
     if (token === TokenKeywords.AT) {
     }
 
     // stub for guests
-    currentLine = tokenizer.getLine();
     token = tokenizer.top();
     if (token === TokenKeywords.WITH) {
     }
@@ -174,6 +158,16 @@ export default class Event extends Node {
   }
 
   typeCheck(): void {
-    // TODO
+    this.daysOfWeek.forEach(dayOfWeek => {
+      if (!Event.validDays.includes(dayOfWeek)) {
+        throw new TypeCheckError(
+          {
+            expected: "a valid day of the week",
+            actual: dayOfWeek
+          },
+          this.lineNumber
+        );
+      }
+    });
   }
 }

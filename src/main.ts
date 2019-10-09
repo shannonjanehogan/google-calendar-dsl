@@ -7,7 +7,7 @@ let program = new Program();
 
 program.parse(tokenizer);
 // program.nameCheck();
-// program.typeCheck();
+program.typeCheck();
 let calendar = new Calendar();
 let context: object[] = [];
 program.evaluate(context);
