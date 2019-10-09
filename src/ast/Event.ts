@@ -55,6 +55,7 @@ export default class Event extends Node {
           throw new ParserError("expected a day of the week", this.lineNumber);
         }
         this.daysOfWeek.push(token);
+        token = tokenizer.top();
       }
     } else if (token === TokenKeywords.ON) {
       this.repeating = false;
