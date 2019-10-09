@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 import Node from "../Node";
 import Tokenizer from "../Tokenizer";
 import { ParserError } from "../errors/ParserError";
@@ -59,6 +61,8 @@ export default class Event extends Node {
             `Error on line ${currentLine}: expected a day of the week`
           );
         }
+        dayOfWeek = token;
+        this.daysOfWeek.push(dayOfWeek);
       }
     } else if (token === TokenKeywords.ON) {
       this.repeating = false;
@@ -123,8 +127,46 @@ export default class Event extends Node {
     }
   }
 
-  evaluate(): void {
-    // TODO
+  evaluate(context: object[]): void {
+    let start: number[];
+    let end: number[];
+    let startMoment: any;
+
+    // create the start date based on if it's recurring or not
+    if (this.repeating) {
+      startMoment = moment();
+      start = startMoment.format("YYYY-M-D").split("-");
+    } else {
+      startMoment = moment(this.date, "MMMM D, YYYY");
+      start = startMoment.format("YYYY-M-D").split("-");
+    }
+
+    // create the end date based on if it's all day or not
+    if (this.allDay) {
+      end = startMoment.add(1, "days").format("YYYY-M-D").split("-");
+    } else {
+      end = [...start];
+      start.push(...this.fromTime.split(":").map(Number));
+      end.push(...this.toTime.split(":").map(Number));
+    }
+    
+    // create the event attribute object
+    let newEvent: any = {
+      title: this.title,
+      start: start,
+      end: end,
+    };
+    
+    // create the recurrence rule
+    if (this.repeating) {
+      let days: string = this.daysOfWeek.reduce((acc: string, curr: string): string => {
+        return acc + curr.substring(0, 2).toUpperCase() + ",";
+      }, "");
+      console.log(days);
+      newEvent["recurrenceRule"] = "FREQ=WEEKLY;BYDAY=" + days + ";INTERVAL=1";
+    }
+    
+    context.push(newEvent);
   }
 
   nameCheck(): void {

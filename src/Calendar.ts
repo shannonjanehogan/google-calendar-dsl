@@ -1,17 +1,16 @@
-const { writeFileSync } = require('fs')
-const ics = require('ics')
+import * as fs from "fs";
+import * as ics from "ics";
+import { EventAttributes } from "ics";
 
 export default class Calendar {
-  let events = new Array<>;
-
-  createCalendarFile(): void {
-    ics.createEvents(events, (error, value) => {
+  createCalendarFile(events: object[]): void {
+    ics.createEvents(events as EventAttributes[], (error: any, value: string) => {
       if (error) {
         // TODO throw appropriate error
         console.log(error)
       }
-
-      writeFileSync('outputs/event.ics', value)
+      console.log(value);
+      fs.writeFileSync('outputs/event.ics', value)
     })
   }
 }

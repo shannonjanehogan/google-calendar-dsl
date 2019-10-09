@@ -34,9 +34,9 @@ export default class Program extends Node {
     }
   }
 
-  evaluate(): void {
+  evaluate(context: object[]): void {
     for (let node of this.nodes) {
-      node.evaluate();
+      node.evaluate(context);
     }
   }
 

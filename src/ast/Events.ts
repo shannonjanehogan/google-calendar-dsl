@@ -31,9 +31,9 @@ export default class Events extends Node {
     console.log("Events:", this.events);
   }
 
-  evaluate(): void {
+  evaluate(context: object[]): void {
     for (let event of this.events) {
-      event.evaluate();
+      event.evaluate(context);
     }
   }
 
