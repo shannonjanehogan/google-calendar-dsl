@@ -43,8 +43,7 @@ export default class Event extends Node {
       if (token === null) {
         throw new ParserError("expected a day of the week", this.lineNumber);
       }
-      let dayOfWeek: string = token;
-      this.daysOfWeek.push(dayOfWeek);
+      this.daysOfWeek.push(token);
       token = tokenizer.top();
       // loop over ("and" DAYOFWEEK)* tokens
       // TODO: clean this up
