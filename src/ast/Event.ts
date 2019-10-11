@@ -146,7 +146,6 @@ export default class Event extends Node {
       let days: string = this.daysOfWeek.reduce((acc: string, curr: string): string => {
         return acc + curr.substring(0, 2).toUpperCase() + ",";
       }, "");
-      console.log(days);
       newEvent["recurrenceRule"] = "FREQ=WEEKLY;BYDAY=" + days + ";INTERVAL=1";
     }
     

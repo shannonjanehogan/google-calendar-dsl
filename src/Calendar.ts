@@ -9,7 +9,6 @@ export default class Calendar {
         // TODO throw appropriate error
         console.log(error)
       }
-      console.log(value);
       fs.writeFileSync('outputs/event.ics', value)
     })
   }
