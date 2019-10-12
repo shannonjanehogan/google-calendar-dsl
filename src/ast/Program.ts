@@ -1,11 +1,14 @@
 import Node from "../Node";
 import Events from "./Events";
+import Guests from "./Guests";
+import Locations from "./Locations";
 import Tokenizer from "../Tokenizer";
 import { ParserError } from "../errors/ParserError";
 import { TokenKeywords } from "../TokenKeywords";
 
 export default class Program extends Node {
   nodes: Node[] = [];
+  types: object = {};
 
   parse(tokenizer: Tokenizer): void {
     // we might be able to get rid of the [Start] and [End] tokens by just relying on the tokenizer.hasNext() method?
@@ -18,6 +21,16 @@ export default class Program extends Node {
       currentLine = tokenizer.getLine();
       token = tokenizer.top();
       switch (token) {
+        case TokenKeywords.GUESTS:
+          let guests = new Guests(); 
+          guests.parse(tokenizer);
+          this.nodes.push(guests); 
+          break; 
+        case TokenKeywords.LOCATIONS:
+          let locations = new Locations(); 
+          locations.parse(tokenizer);
+          this.nodes.push(locations); 
+          break; 
         case TokenKeywords.EVENTS:
           let events = new Events();
           events.parse(tokenizer);
@@ -34,7 +47,7 @@ export default class Program extends Node {
     }
   }
 
-  evaluate(context: object[]): void {
+evaluate(context: object[]): void {
     for (let node of this.nodes) {
       node.evaluate(context);
     }
