@@ -14,7 +14,7 @@ export default class Guest extends Node {
     if (token === null) {
       throw new ParserError("expected a guest id", this.lineNumber);
     }
-    this.id  = token; 
+    this.id = token; 
     
     token = tokenizer.pop();
     if (token !== TokenKeywords.IS) {

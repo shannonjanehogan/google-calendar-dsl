@@ -19,9 +19,7 @@ export default class Guests extends Node {
     currentLine = tokenizer.getLine();
     token = tokenizer.pop(); // KEYWORD: DONE
     if (token !== TokenKeywords.DONE) {
-      throw new ParserError(
-        `Error at line ${currentLine}: expected keyword [${TokenKeywords.DONE}] but got [${token}]`
-      );
+      throw new ParserError(`expected keyword [${TokenKeywords.DONE}] but got [${token}]`, currentLine);
     }
     console.log("Guests:", this.guests);
   }

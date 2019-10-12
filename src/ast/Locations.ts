@@ -20,9 +20,7 @@ export default class Locations extends Node {
     token = tokenizer.pop();
 
     if (token !== TokenKeywords.DONE) {
-      throw new ParserError(
-        `Error at line ${currentLine}: expected keyword [${TokenKeywords.DONE}] but got [${token}]`
-      );
+      throw new ParserError(`expected keyword [${TokenKeywords.DONE}] but got [${token}]`, currentLine);
     }
     console.log("Locations:", this.locations);
   }

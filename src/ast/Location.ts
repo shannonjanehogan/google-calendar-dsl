@@ -13,11 +13,11 @@ export default class Location extends Node {
     if (token === null) {
       throw new ParserError("expected a location ID", this.lineNumber);
     }
-    this.id  = token; 
+    this.id = token; 
     
     token = tokenizer.pop();
     if (token !== TokenKeywords.IS) {
-      throw new ParserError(`expected keyword [${TokenKeywords.IS}] but got [${token}]`,this.lineNumber);
+      throw new ParserError(`expected keyword [${TokenKeywords.IS}] but got [${token}]`, this.lineNumber);
     }
 
     token = tokenizer.pop(); 

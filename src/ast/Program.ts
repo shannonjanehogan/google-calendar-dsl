@@ -15,7 +15,7 @@ export default class Program extends Node {
     let currentLine = tokenizer.getLine();
     let token = tokenizer.pop();
     if (token !== TokenKeywords.START) {
-      throw new ParserError(`Error at line ${currentLine}: expected keyword [${TokenKeywords.START}] but got [${token}]`);
+      throw new ParserError(`expected keyword [${TokenKeywords.START}] but got [${token}]`, currentLine);
     }
     while (tokenizer.top() !== TokenKeywords.END) {
       currentLine = tokenizer.getLine();
@@ -43,7 +43,7 @@ export default class Program extends Node {
     currentLine = tokenizer.getLine();
     token = tokenizer.pop();
     if (token !== TokenKeywords.END) {
-      throw new ParserError(`Error at line ${currentLine}: expected keyword [${TokenKeywords.START}] but got [${token}]`);
+      throw new ParserError(`expected keyword [${TokenKeywords.START}] but got [${token}]`, currentLine);
     }
   }
 
