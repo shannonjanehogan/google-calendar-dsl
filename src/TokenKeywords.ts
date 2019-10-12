@@ -2,7 +2,7 @@ export enum TokenKeywords {
     START = "Start",
     EVENTS = "Events:",
     LOCATIONS = "Locations:",
-    GUESTS = "Guests",
+    GUESTS = "Guests:",
     EVERY = "every",
     AND = "and",
     ON = "on",
@@ -12,5 +12,6 @@ export enum TokenKeywords {
     AT = "at",
     WITH = "with",
     DONE = "Done",
-    END = "End"
+    END = "End",
+    IS = "is", 
 }

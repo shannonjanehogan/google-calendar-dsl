@@ -90,7 +90,7 @@ export default class Event extends Node {
       }
       token = tokenizer.pop();
       if (token === null) {
-        throw new ParserError("expected an end time time", this.lineNumber);
+        throw new ParserError("expected an end time", this.lineNumber);
       }
       this.toTime = token;
     } else {
@@ -103,11 +103,27 @@ export default class Event extends Node {
     // stub for locations
     token = tokenizer.top();
     if (token === TokenKeywords.AT) {
+      tokenizer.pop();  // KEYWORD: AT 
+      token = tokenizer.pop();  
+      if (token === null) {
+        throw new ParserError("expected a location", this.lineNumber);
+      }
+      this.location = token; 
     }
 
     // stub for guests
     token = tokenizer.top();
     if (token === TokenKeywords.WITH) {
+      let isFirst = true; 
+      while (isFirst || tokenizer.top() === TokenKeywords.AND) {
+        if (isFirst) isFirst = false; 
+        tokenizer.pop(); // KEYWORD: WITH or AND
+        token = tokenizer.pop(); 
+        if (token === null) {
+          throw new ParserError("expected a guest ID", this.lineNumber);
+        }
+        this.guests.push(token); 
+      }
     }
   }
 
