@@ -30,14 +30,15 @@ export default class Guests extends Node {
     }
   }
 
-  nameCheck(): void {
+  nameCheck(map: object): void {
     for (let guest of this.guests) {
-      guest.nameCheck();
+      guest.nameCheck(map);
     }
   }
-  typeCheck(): void {
+
+  typeCheck(map: object): void {
     for (let guest of this.guests) {
-      guest.typeCheck();
+      guest.typeCheck(map);
     }
   }
 }

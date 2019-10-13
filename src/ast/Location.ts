@@ -2,6 +2,7 @@ import Node from "../Node";
 import Tokenizer from "../Tokenizer";
 import { ParserError } from "../errors/ParserError";
 import { TokenKeywords } from "../TokenKeywords";
+import { NameCheckError } from "../errors/NameCheckError";
 
 export default class Location extends Node {
   id: string = "";  
@@ -27,13 +28,27 @@ export default class Location extends Node {
     this.address = token;
     
   }  evaluate(context: object[]): void {
-    throw new Error("Method not implemented.");
+    // throw new Error("Method not implemented.");
   }
-  nameCheck(): void {
-    throw new Error("Method not implemented.");
+  
+  nameCheck(map: object): void {
+    if (!map.hasOwnProperty(this.id)) {
+      let values = [null, this.address]; 
+      Object.assign(map, {[this.id as string]: values});
+    } else {
+      throw new NameCheckError(`Location with identifier ${this.id} is already defined.`); 
+    }  
   }
-  typeCheck(): void {
-    throw new Error("Method not implemented.");
+  
+  typeCheck(map: any): void {
+    if (!map.hasOwnProperty(this.id)) throw new Error("Map doesn't contain Location.");
+    map[this.id][0] = Location; 
+    // let id = this.id;
+    // Object.entries(map).forEach(function([key, value]) {
+    //   if (key === id) {
+    //     value[0] = Location;
+    //   }
+    // });
   }
 }
 

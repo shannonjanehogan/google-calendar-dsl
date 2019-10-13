@@ -34,9 +34,9 @@ export default class Events extends Node {
     }
   }
 
-  nameCheck(): void {
+  nameCheck(map: object): void {
     for (let event of this.events) {
-      event.nameCheck();
+      event.nameCheck(map);
     }
   }
 

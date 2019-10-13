@@ -30,15 +30,15 @@ export default class Locations extends Node {
       location.evaluate(context);
     }
   }
-
-  nameCheck(): void {
+  
+  nameCheck(map: object): void {
     for (let location of this.locations) {
-      location.nameCheck();
+      location.nameCheck(map);
     }
   }
-  typeCheck(): void {
+  typeCheck(map: object): void {
     for (let location of this.locations) {
-      location.typeCheck();
+      location.typeCheck(map);
     }
   }
 }
