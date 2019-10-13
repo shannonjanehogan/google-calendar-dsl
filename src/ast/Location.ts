@@ -33,7 +33,7 @@ export default class Location extends Node {
   
   nameCheck(map: object): void {
     if (!map.hasOwnProperty(this.id)) {
-      let values = [null, this.address]; 
+      let values = [null, null]; 
       Object.assign(map, {[this.id as string]: values});
     } else {
       throw new NameCheckError(`Location with identifier ${this.id} is already defined.`); 

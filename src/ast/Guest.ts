@@ -46,7 +46,7 @@ export default class Guest extends Node {
 
   nameCheck(map: object): void {
     if (!map.hasOwnProperty(this.id)) {
-      let values = [null, this.name,this.email]; 
+      let values = [null, null, null]; 
       Object.assign(map, {[this.id ]: values});
     } else {
       throw new NameCheckError(`Guest with identifier ${this.id} is already defined.`); 
