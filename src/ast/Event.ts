@@ -174,13 +174,13 @@ export default class Event extends Node {
     // namecheck guest
     this.guests.forEach( guest => {
       if (!map.hasOwnProperty(guest)) {
-        throw new NameCheckError(`Guest with identifier ${guest} is not defined.`); 
+        throw new NameCheckError(`Guest with identifier ${guest} is not defined.`, this.lineNumber); 
       }
     });
 
     // namecheck location 
     if (this.location !== "" && !map.hasOwnProperty(this.location)) {
-      throw new NameCheckError(`Event location with identifier ${this.location} is not defined.`); 
+      throw new NameCheckError(`Event location with identifier ${this.location} is not defined.`, this.lineNumber); 
     }
   }
 

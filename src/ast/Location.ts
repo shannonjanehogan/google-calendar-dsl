@@ -36,7 +36,7 @@ export default class Location extends Node {
       let values = [null, null]; 
       Object.assign(map, {[this.id as string]: values});
     } else {
-      throw new NameCheckError(`Location with identifier ${this.id} is already defined.`); 
+      throw new NameCheckError(`Location with identifier ${this.id} is already defined.`, this.lineNumber); 
     }  
   }
   

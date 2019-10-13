@@ -49,7 +49,7 @@ export default class Guest extends Node {
       let values = [null, null, null]; 
       Object.assign(map, {[this.id ]: values});
     } else {
-      throw new NameCheckError(`Guest with identifier ${this.id} is already defined.`); 
+      throw new NameCheckError(`Guest with identifier ${this.id} is already defined.`, this.lineNumber); 
     }
   }
 
