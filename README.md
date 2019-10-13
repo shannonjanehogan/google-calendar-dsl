@@ -1,9 +1,17 @@
 # google-calendar-dsl
 User friendly language to create google calendar events
 
+To run, type the following into the command line:
+
+`yarn install && yarn run build && yarn run calendar`
+
+This will output an ics file in outputs/events.ics
+
+Drag and drop outputs/events.ics into a calendar to see your newly created events!
+
 ```
 EBNF Syntax:
-PROGRAM	    ::=	“Start” CALTYPES+ “End” 
+PROGRAM	    ::=	“Start” CALTYPES+ “End”
 CALTYPES	  ::=	[EVENTS|GUESTS|REMINDERS|LOCATIONS] “Done”
 EVENTS	    ::=	“Events:” [EVENT]+
 EVENT		    ::=	“STRING [“every” DAYOFWEEK (“and” DAYOFWEEK)*|“on” DATE]
