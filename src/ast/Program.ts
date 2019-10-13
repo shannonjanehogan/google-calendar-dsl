@@ -8,7 +8,7 @@ import { TokenKeywords } from "../TokenKeywords";
 
 export default class Program extends Node {
   nodes: Node[] = [];
-  types: object = {};
+  map: { [k: string]: any; } = {};
 
   parse(tokenizer: Tokenizer): void {
     // we might be able to get rid of the [Start] and [End] tokens by just relying on the tokenizer.hasNext() method?
@@ -55,13 +55,15 @@ evaluate(context: object[]): void {
 
   nameCheck(): void {
     for (let node of this.nodes) {
-      node.nameCheck();
+      node.nameCheck(this.map);
     }
+    console.log("Map after nameCheck: ", this.map, "\n\n");
   }
 
   typeCheck(): void {
     for (let node of this.nodes) {
-      node.typeCheck();
+      node.typeCheck(this.map);
     }
+    console.log("Map after typeCheck: ", this.map, "\n\n");
   }
 }

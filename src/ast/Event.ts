@@ -5,6 +5,8 @@ import Tokenizer from "../Tokenizer";
 import { ParserError } from "../errors/ParserError";
 import { TypeCheckError } from "../errors/TypeCheckError";
 import { TokenKeywords } from "../TokenKeywords";
+import { NameCheckError } from '../errors/NameCheckError';
+import Guest from './Guest';
 
 export default class Event extends Node {
   static readonly validDays: string[] = [
@@ -168,11 +170,22 @@ export default class Event extends Node {
     context.push(newEvent);
   }
 
-  nameCheck(): void {
-    // TODO
+  nameCheck(map: any): void {
+    // namecheck guest
+    this.guests.forEach( guest => {
+      if (!map.hasOwnProperty(guest)) {
+        throw new NameCheckError(`Guest with identifier ${guest} is not defined.`, this.lineNumber); 
+      }
+    });
+
+    // namecheck location 
+    if (this.location !== "" && !map.hasOwnProperty(this.location)) {
+      throw new NameCheckError(`Event location with identifier ${this.location} is not defined.`, this.lineNumber); 
+    }
   }
 
   typeCheck(): void {
+    // typecheck days of the week
     this.daysOfWeek.forEach(dayOfWeek => {
       if (!Event.validDays.includes(dayOfWeek)) {
         throw new TypeCheckError(
@@ -184,5 +197,9 @@ export default class Event extends Node {
         );
       }
     });
+    // typecheck guest
+
+    // typecheck location
+
   }
 }

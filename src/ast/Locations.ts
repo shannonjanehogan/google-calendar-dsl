@@ -22,7 +22,7 @@ export default class Locations extends Node {
     if (token !== TokenKeywords.DONE) {
       throw new ParserError(`expected keyword [${TokenKeywords.DONE}] but got [${token}]`, currentLine);
     }
-    console.log("Locations:", this.locations);
+    console.log("Locations:", this.locations, "\n", "\n");
   }
 
   evaluate(context: object[]): void {
@@ -30,15 +30,15 @@ export default class Locations extends Node {
       location.evaluate(context);
     }
   }
-
-  nameCheck(): void {
+  
+  nameCheck(map: object): void {
     for (let location of this.locations) {
-      location.nameCheck();
+      location.nameCheck(map);
     }
   }
-  typeCheck(): void {
+  typeCheck(map: object): void {
     for (let location of this.locations) {
-      location.typeCheck();
+      location.typeCheck(map);
     }
   }
 }

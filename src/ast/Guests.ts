@@ -21,7 +21,7 @@ export default class Guests extends Node {
     if (token !== TokenKeywords.DONE) {
       throw new ParserError(`expected keyword [${TokenKeywords.DONE}] but got [${token}]`, currentLine);
     }
-    console.log("Guests:", this.guests);
+    console.log("Guests:", this.guests, "\n\n");
   }
 
   evaluate(context: object[]): void {
@@ -30,14 +30,15 @@ export default class Guests extends Node {
     }
   }
 
-  nameCheck(): void {
+  nameCheck(map: object): void {
     for (let guest of this.guests) {
-      guest.nameCheck();
+      guest.nameCheck(map);
     }
   }
-  typeCheck(): void {
+
+  typeCheck(map: object): void {
     for (let guest of this.guests) {
-      guest.typeCheck();
+      guest.typeCheck(map);
     }
   }
 }
