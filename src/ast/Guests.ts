@@ -21,7 +21,7 @@ export default class Guests extends Node {
     if (token !== TokenKeywords.DONE) {
       throw new ParserError(`expected keyword [${TokenKeywords.DONE}] but got [${token}]`, currentLine);
     }
-    console.log("Guests:", this.guests);
+    console.log("Guests:", this.guests, "\n\n");
   }
 
   evaluate(context: object[]): void {

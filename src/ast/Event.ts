@@ -179,7 +179,7 @@ export default class Event extends Node {
     });
 
     // namecheck location 
-    if (!map.hasOwnProperty(this.location)) {
+    if (this.location !== "" && !map.hasOwnProperty(this.location)) {
       throw new NameCheckError(`Event location with identifier ${this.location} is not defined.`); 
     }
   }

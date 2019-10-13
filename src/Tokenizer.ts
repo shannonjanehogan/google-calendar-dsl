@@ -48,8 +48,8 @@ export default class Tokenizer {
 
     this.tokens = tokenList;
 
-    console.log(tokenizedProgram);
-    console.log(tokenList);
+    // console.log(tokenizedProgram, "\n");
+    // console.log(tokenList, "\n");
   }
 
   public top(): string | null {

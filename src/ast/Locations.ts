@@ -22,7 +22,7 @@ export default class Locations extends Node {
     if (token !== TokenKeywords.DONE) {
       throw new ParserError(`expected keyword [${TokenKeywords.DONE}] but got [${token}]`, currentLine);
     }
-    console.log("Locations:", this.locations);
+    console.log("Locations:", this.locations, "\n", "\n");
   }
 
   evaluate(context: object[]): void {

@@ -24,8 +24,7 @@ export default class Events extends Node {
     if (token !== TokenKeywords.DONE) {
       throw new ParserError(`expected keyword [${TokenKeywords.DONE}] but got [${token}]`, currentLine);    
     }
-
-    console.log("Events:", this.events);
+    console.log("Events:", this.events, "\n\n");
   }
 
   evaluate(context: object[]): void {
