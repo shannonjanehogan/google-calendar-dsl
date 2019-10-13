@@ -11,10 +11,10 @@ export default class Locations extends Node {
     let currentLine = tokenizer.getLine();
     let token = tokenizer.pop();
 
-    while(tokenizer.top() !== TokenKeywords.DONE) { 
-      let location: Location = new Location(); 
-      location.parse(tokenizer); 
-      this.locations.push(location); 
+    while(tokenizer.top() !== TokenKeywords.DONE) {
+      let location: Location = new Location();
+      location.parse(tokenizer);
+      this.locations.push(location);
     }
     currentLine = tokenizer.getLine();
     token = tokenizer.pop();
@@ -30,7 +30,7 @@ export default class Locations extends Node {
       location.evaluate(context);
     }
   }
-  
+
   nameCheck(map: object): void {
     for (let location of this.locations) {
       location.nameCheck(map);

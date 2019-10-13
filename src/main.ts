@@ -9,6 +9,10 @@ program.parse(tokenizer);
 program.nameCheck();
 program.typeCheck();
 let calendar = new Calendar();
-let context: object[] = [];
+let context: any = {
+  guests: [],
+  locations: [],
+  events: [],
+};
 program.evaluate(context);
-calendar.createCalendarFile(context)
+calendar.createCalendarFile(context.events)

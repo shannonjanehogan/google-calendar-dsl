@@ -11,10 +11,10 @@ export default class Guests extends Node {
     let currentLine = tokenizer.getLine();
     let token = tokenizer.pop();
 
-    while(tokenizer.top() !== TokenKeywords.DONE) { 
-      let guest: Guest = new Guest(); 
-      guest.parse(tokenizer); 
-      this.guests.push(guest); 
+    while(tokenizer.top() !== TokenKeywords.DONE) {
+      let guest: Guest = new Guest();
+      guest.parse(tokenizer);
+      this.guests.push(guest);
     }
     currentLine = tokenizer.getLine();
     token = tokenizer.pop(); // KEYWORD: DONE

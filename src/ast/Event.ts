@@ -105,31 +105,31 @@ export default class Event extends Node {
     // stub for locations
     token = tokenizer.top();
     if (token === TokenKeywords.AT) {
-      tokenizer.pop();  // KEYWORD: AT 
-      token = tokenizer.pop();  
+      tokenizer.pop();  // KEYWORD: AT
+      token = tokenizer.pop();
       if (token === null) {
         throw new ParserError("expected a location", this.lineNumber);
       }
-      this.location = token; 
+      this.location = token;
     }
 
     // stub for guests
     token = tokenizer.top();
     if (token === TokenKeywords.WITH) {
-      let isFirst = true; 
+      let isFirst = true;
       while (isFirst || tokenizer.top() === TokenKeywords.AND) {
-        if (isFirst) isFirst = false; 
+        if (isFirst) isFirst = false;
         tokenizer.pop(); // KEYWORD: WITH or AND
-        token = tokenizer.pop(); 
+        token = tokenizer.pop();
         if (token === null) {
           throw new ParserError("expected a guest ID", this.lineNumber);
         }
-        this.guests.push(token); 
+        this.guests.push(token);
       }
     }
   }
 
-  evaluate(context: object[]): void {
+  evaluate(context: any): void {
     let start: number[];
     let end: number[];
     let startMoment: any;
@@ -151,14 +151,41 @@ export default class Event extends Node {
       start.push(...this.fromTime.split(":").map(Number));
       end.push(...this.toTime.split(":").map(Number));
     }
-    
+
     // create the event attribute object
+
+    let attendees = [];
+
+    for (let guest of this.guests) {
+      let guestObject: any;
+      for (guestObject of context.guests) {
+        if (guestObject.id === guest) {
+          let eventGuest: any = {
+            name: guestObject.name,
+            email: guestObject.email,
+          }
+          attendees.push(eventGuest);
+        }
+      }
+    }
+
+    let eventLocation = this.location;
+    let locationObject: any;
+
+    for (locationObject of context.locations) {
+      if (locationObject.id === this.location) {
+        eventLocation = locationObject.address;
+      }
+    }
+
     let newEvent: any = {
       title: this.title,
       start: start,
       end: end,
+      attendees: attendees,
+      location: eventLocation,
     };
-    
+
     // create the recurrence rule
     if (this.repeating) {
       let days: string = this.daysOfWeek.reduce((acc: string, curr: string): string => {
@@ -166,21 +193,21 @@ export default class Event extends Node {
       }, "");
       newEvent["recurrenceRule"] = "FREQ=WEEKLY;BYDAY=" + days + ";INTERVAL=1";
     }
-    
-    context.push(newEvent);
+
+    context.events.push(newEvent);
   }
 
   nameCheck(map: any): void {
     // namecheck guest
     this.guests.forEach( guest => {
       if (!map.hasOwnProperty(guest)) {
-        throw new NameCheckError(`Guest with identifier ${guest} is not defined.`, this.lineNumber); 
+        throw new NameCheckError(`Guest with identifier ${guest} is not defined.`, this.lineNumber);
       }
     });
 
-    // namecheck location 
+    // namecheck location
     if (this.location !== "" && !map.hasOwnProperty(this.location)) {
-      throw new NameCheckError(`Event location with identifier ${this.location} is not defined.`, this.lineNumber); 
+      throw new NameCheckError(`Event location with identifier ${this.location} is not defined.`, this.lineNumber);
     }
   }
 
