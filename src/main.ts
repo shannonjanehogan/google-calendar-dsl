@@ -12,6 +12,5 @@ program.parse(tokenizer);
 program.nameCheck();
 program.typeCheck();
 let calendar = new Calendar();
-let context: object[] = [];
-program.evaluate(context);
-calendar.createCalendarFile(context);
+let events: any[] = program.evaluate();
+calendar.createCalendarFile(events);

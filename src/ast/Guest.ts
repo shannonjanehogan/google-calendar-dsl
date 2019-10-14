@@ -47,8 +47,9 @@ export default class Guest extends Node {
     this.email = token;
   }
 
-  evaluate(context: object[]): void {
-    // throw new Error("Method not implemented.");
+  evaluate(map: any, events: object[]): void {
+    map[this.id][1] = this.name;
+    map[this.id][2] = this.email;
   }
 
   nameCheck(map: object): void {

@@ -30,8 +30,8 @@ export default class Location extends Node {
     }
     this.address = token;
   }
-  evaluate(context: object[]): void {
-    // throw new Error("Method not implemented.");
+  evaluate(map: any, events: object[]): void {
+    map[this.id][1] = this.address;
   }
 
   nameCheck(map: object): void {

@@ -24,9 +24,9 @@ export default class Guests extends Node {
     console.log("Guests:", this.guests, "\n\n");
   }
 
-  evaluate(context: object[]): void {
+  evaluate(map: object, events: object[]): void {
     for (let guest of this.guests) {
-      guest.evaluate(context);
+      guest.evaluate(map, events);
     }
   }
 
