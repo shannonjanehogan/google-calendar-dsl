@@ -12,7 +12,10 @@ export default class Events extends Node {
     let token = tokenizer.pop();
     // note: not sure if this error is needed because programs now has a switch statement, so it wouldn't get here if token wasn't EVENTS? 
     if (token !== TokenKeywords.EVENTS) {
-      throw new ParserError(`expected keyword [${TokenKeywords.EVENTS}] but got [${token}]`, currentLine);        
+      throw new ParserError(
+        `expected keyword [${TokenKeywords.EVENTS}] but got [${token}]`,
+        currentLine
+      );
     }
     while (tokenizer.top() !== TokenKeywords.DONE) {
       let event: Event = new Event();
@@ -22,7 +25,10 @@ export default class Events extends Node {
     currentLine = tokenizer.getLine();
     token = tokenizer.pop();
     if (token !== TokenKeywords.DONE) {
-      throw new ParserError(`expected keyword [${TokenKeywords.DONE}] but got [${token}]`, currentLine);    
+      throw new ParserError(
+        `expected keyword [${TokenKeywords.DONE}] but got [${token}]`,
+        currentLine
+      );
     }
     console.log("Events:", this.events, "\n\n");
   }
