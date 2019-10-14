@@ -2,7 +2,10 @@ import Program from "./ast/Program";
 import Tokenizer from "./Tokenizer";
 import Calendar from "./Calendar";
 
-let tokenizer = new Tokenizer("./inputs/valid_simple.cal");
+const args = process.argv;
+const fileArg = args[2] || "./inputs/valid_simple.cal";
+
+let tokenizer = new Tokenizer(fileArg);
 let program = new Program();
 
 program.parse(tokenizer);
