@@ -66,6 +66,6 @@ export default class Guest extends Node {
   typeCheck(map: any): void {
     if (!map.hasOwnProperty(this.id))
       throw new Error("Map doesn't contain Guest.");
-    map[this.id][0] = Guest;
+    map[this.id][0] = "Guest";
   }
 }

@@ -6,7 +6,6 @@ import { ParserError } from "../errors/ParserError";
 import { TypeCheckError } from "../errors/TypeCheckError";
 import { TokenKeywords } from "../TokenKeywords";
 import { NameCheckError } from "../errors/NameCheckError";
-import Guest from "./Guest";
 
 export default class Event extends Node {
   static readonly validDays: string[] = [
@@ -196,7 +195,7 @@ export default class Event extends Node {
     }
   }
 
-  typeCheck(): void {
+  typeCheck(map: any): void {
     // typecheck days of the week
     this.daysOfWeek.forEach(dayOfWeek => {
       if (!Event.validDays.includes(dayOfWeek)) {
@@ -210,9 +209,36 @@ export default class Event extends Node {
       }
     });
 
-    // typecheck guest
-    this.guests.forEach(guest => {});
+    // typecheck guests
+    if (this.guests.length) {
+      this.guests.forEach(guest => {
+        const guestMapValue = map[guest];
+
+        if (!(guestMapValue[0] === "Guest")) {
+          throw new TypeCheckError(
+            {
+              expected: "a valid Guest",
+              actual: guestMapValue[0]
+            },
+            this.lineNumber
+          );
+        }
+      });
+    }
 
     // typecheck location
+    if (this.location) {
+      const locationMapValue = map[this.location];
+
+      if (!(locationMapValue[0] === "Location")) {
+        throw new TypeCheckError(
+          {
+            expected: "a valid Location",
+            actual: locationMapValue[0]
+          },
+          this.lineNumber
+        );
+      }
+    }
   }
 }

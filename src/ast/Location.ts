@@ -49,7 +49,7 @@ export default class Location extends Node {
   typeCheck(map: any): void {
     if (!map.hasOwnProperty(this.id))
       throw new Error("Map doesn't contain Location.");
-    map[this.id][0] = Location;
+    map[this.id][0] = "Location";
     // let id = this.id;
     // Object.entries(map).forEach(function([key, value]) {
     //   if (key === id) {

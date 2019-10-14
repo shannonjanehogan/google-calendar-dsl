@@ -10,7 +10,7 @@ export default class Events extends Node {
   parse(tokenizer: Tokenizer): void {
     let currentLine = tokenizer.getLine();
     let token = tokenizer.pop();
-    // note: not sure if this error is needed because programs now has a switch statement, so it wouldn't get here if token wasn't EVENTS? 
+    // note: not sure if this error is needed because programs now has a switch statement, so it wouldn't get here if token wasn't EVENTS?
     if (token !== TokenKeywords.EVENTS) {
       throw new ParserError(
         `expected keyword [${TokenKeywords.EVENTS}] but got [${token}]`,
@@ -45,9 +45,9 @@ export default class Events extends Node {
     }
   }
 
-  typeCheck(): void {
+  typeCheck(map: object): void {
     for (let event of this.events) {
-      event.typeCheck();
+      event.typeCheck(map);
     }
   }
 }

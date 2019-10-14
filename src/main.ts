@@ -11,4 +11,4 @@ program.typeCheck();
 let calendar = new Calendar();
 let context: object[] = [];
 program.evaluate(context);
-calendar.createCalendarFile(context)
+calendar.createCalendarFile(context);
