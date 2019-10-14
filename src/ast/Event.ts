@@ -128,7 +128,7 @@ export default class Event extends Node {
     }
   }
 
-  evaluate(context: object[]): void {
+  evaluate(map: any, events: object[]): void {
     let start: number[];
     let end: number[];
     let startMoment: any;
@@ -172,7 +172,24 @@ export default class Event extends Node {
       newEvent["recurrenceRule"] = "FREQ=WEEKLY;BYDAY=" + days + ";INTERVAL=1";
     }
 
-    context.push(newEvent);
+    if (this.guests.length) {
+      let attendees: object[] = [];
+      this.guests.forEach(guest => {
+        let attendee = {
+          name: map[guest][1],
+          email: map[guest][2],
+          role: "REQ-PARTICIPANT"
+        }
+        attendees.push(attendee);
+      });
+      newEvent["attendees"] = attendees;
+    }
+
+    if (this.location) {
+      newEvent["location"] = map[this.location][1];
+    }
+
+    events.push(newEvent);
   }
 
   nameCheck(map: any): void {

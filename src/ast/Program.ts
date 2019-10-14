@@ -9,6 +9,7 @@ import { TokenKeywords } from "../TokenKeywords";
 export default class Program extends Node {
   nodes: Node[] = [];
   map: { [k: string]: any; } = {};
+  events: any[] = [];
 
   parse(tokenizer: Tokenizer): void {
     // we might be able to get rid of the [Start] and [End] tokens by just relying on the tokenizer.hasNext() method?
@@ -47,10 +48,12 @@ export default class Program extends Node {
     }
   }
 
-evaluate(context: object[]): void {
+  evaluate(): any[] {
     for (let node of this.nodes) {
-      node.evaluate(context);
+      node.evaluate(this.map, this.events);
     }
+
+    return this.events;
   }
 
   nameCheck(): void {

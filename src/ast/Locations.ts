@@ -25,9 +25,9 @@ export default class Locations extends Node {
     console.log("Locations:", this.locations, "\n", "\n");
   }
 
-  evaluate(context: object[]): void {
+  evaluate(map: object, events: object[]): void {
     for (let location of this.locations) {
-      location.evaluate(context);
+      location.evaluate(map, events);
     }
   }
   

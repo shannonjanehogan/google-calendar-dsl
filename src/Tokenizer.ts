@@ -33,6 +33,9 @@ export default class Tokenizer {
       );
     });
 
+    // Remove empty spaces between dollar signs (i.e. keywords beside one another)
+    tokenizedProgram = tokenizedProgram.replace(/[\$]{2,}\s+[\$]{2,}/g, "$$$$");
+
     // Remove extra spacing around each token
     tokenizedProgram = tokenizedProgram.replace(/[ ]{2,}/g, " ");
 
