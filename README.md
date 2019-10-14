@@ -9,9 +9,9 @@ After, please upload your calendar to iCal or Outlook! Google Calendar does not 
 
 ```
 EBNF Syntax:
-PROGRAM	    ::=	“Start” CALTYPES+ “End” 
+PROGRAM	        ::=	“Start” CALTYPES+ “End” 
 CALTYPES	::=	[EVENTS|GUESTS|REMINDERS|LOCATIONS] “Done”
-EVENTS	    ::=	“Events:” [EVENT]+
+EVENTS	        ::=	“Events:” [EVENT]+
 EVENT		::=	“STRING [“every” DAYOFWEEK (“and” DAYOFWEEK)*|“on” DATE]
               [“all day”|”from” TIME to TIME] (“at” STRING)?
               (“with” STRING (“and” STRING)*)?
@@ -19,9 +19,9 @@ DATE		::=	MM DD, YYYY
 TIME		::= hh:mm
 DAYOFWEEK 	::=	[“Sunday”|“Monday”|“Tuesday”|“Wednesday”|“Thursday”|
                 “Friday”|“Saturday”]
-GUESTS	    ::=	“Guests:” [GUEST]+
+GUESTS	        ::=	“Guests:” [GUEST]+
 GUEST		::=	STRING is STRING with EMAIL
-EMAIL 	    ::= STRING\@STRING.STRING
+EMAIL 	        ::= STRING\@STRING.STRING
 LOCATIONS	::=	“Locations:” [LOCATION]+
 LOCATION	::= STRING: STRING
 ```
