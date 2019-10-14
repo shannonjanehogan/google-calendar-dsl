@@ -217,7 +217,7 @@ export default class Event extends Node {
         if (!(guestMapValue[0] === "Guest")) {
           throw new TypeCheckError(
             {
-              expected: "a valid Guest",
+              expected: `${guest} to be a valid Guest`,
               actual: guestMapValue[0]
             },
             this.lineNumber
@@ -233,7 +233,7 @@ export default class Event extends Node {
       if (!(locationMapValue[0] === "Location")) {
         throw new TypeCheckError(
           {
-            expected: "a valid Location",
+            expected: `${this.location} to be a valid Location`,
             actual: locationMapValue[0]
           },
           this.lineNumber
