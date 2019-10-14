@@ -10,9 +10,11 @@ export default class Events extends Node {
   parse(tokenizer: Tokenizer): void {
     let currentLine = tokenizer.getLine();
     let token = tokenizer.pop();
+    // note: not sure if this error is needed because programs now has a switch statement, so it wouldn't get here if token wasn't EVENTS?
     if (token !== TokenKeywords.EVENTS) {
       throw new ParserError(
-        `Error at line ${currentLine}: expected keyword [${TokenKeywords.EVENTS}] but got [${token}]`
+        `expected keyword [${TokenKeywords.EVENTS}] but got [${token}]`,
+        currentLine
       );
     }
     while (tokenizer.top() !== TokenKeywords.DONE) {
@@ -24,11 +26,11 @@ export default class Events extends Node {
     token = tokenizer.pop();
     if (token !== TokenKeywords.DONE) {
       throw new ParserError(
-        `Error at line ${currentLine}: expected keyword [${TokenKeywords.DONE}] but got [${token}]`
+        `expected keyword [${TokenKeywords.DONE}] but got [${token}]`,
+        currentLine
       );
     }
-
-    console.log("Events:", this.events);
+    console.log("Events:", this.events, "\n\n");
   }
 
   evaluate(context: object[]): void {
@@ -37,15 +39,15 @@ export default class Events extends Node {
     }
   }
 
-  nameCheck(): void {
+  nameCheck(map: object): void {
     for (let event of this.events) {
-      event.nameCheck();
+      event.nameCheck(map);
     }
   }
 
-  typeCheck(): void {
+  typeCheck(map: object): void {
     for (let event of this.events) {
-      event.typeCheck();
+      event.typeCheck(map);
     }
   }
 }

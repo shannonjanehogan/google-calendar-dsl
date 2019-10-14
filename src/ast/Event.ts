@@ -1,10 +1,11 @@
-import moment from 'moment';
+import moment from "moment";
 
 import Node from "../Node";
 import Tokenizer from "../Tokenizer";
 import { ParserError } from "../errors/ParserError";
 import { TypeCheckError } from "../errors/TypeCheckError";
 import { TokenKeywords } from "../TokenKeywords";
+import { NameCheckError } from "../errors/NameCheckError";
 
 export default class Event extends Node {
   static readonly validDays: string[] = [
@@ -90,7 +91,7 @@ export default class Event extends Node {
       }
       token = tokenizer.pop();
       if (token === null) {
-        throw new ParserError("expected an end time time", this.lineNumber);
+        throw new ParserError("expected an end time", this.lineNumber);
       }
       this.toTime = token;
     } else {
@@ -103,11 +104,27 @@ export default class Event extends Node {
     // stub for locations
     token = tokenizer.top();
     if (token === TokenKeywords.AT) {
+      tokenizer.pop(); // KEYWORD: AT
+      token = tokenizer.pop();
+      if (token === null) {
+        throw new ParserError("expected a location", this.lineNumber);
+      }
+      this.location = token;
     }
 
     // stub for guests
     token = tokenizer.top();
     if (token === TokenKeywords.WITH) {
+      let isFirst = true;
+      while (isFirst || tokenizer.top() === TokenKeywords.AND) {
+        if (isFirst) isFirst = false;
+        tokenizer.pop(); // KEYWORD: WITH or AND
+        token = tokenizer.pop();
+        if (token === null) {
+          throw new ParserError("expected a guest ID", this.lineNumber);
+        }
+        this.guests.push(token);
+      }
     }
   }
 
@@ -127,36 +144,59 @@ export default class Event extends Node {
 
     // create the end date based on if it's all day or not
     if (this.allDay) {
-      end = startMoment.add(1, "days").format("YYYY-M-D").split("-");
+      end = startMoment
+        .add(1, "days")
+        .format("YYYY-M-D")
+        .split("-");
     } else {
       end = [...start];
       start.push(...this.fromTime.split(":").map(Number));
       end.push(...this.toTime.split(":").map(Number));
     }
-    
+
     // create the event attribute object
     let newEvent: any = {
       title: this.title,
       start: start,
-      end: end,
+      end: end
     };
-    
+
     // create the recurrence rule
     if (this.repeating) {
-      let days: string = this.daysOfWeek.reduce((acc: string, curr: string): string => {
-        return acc + curr.substring(0, 2).toUpperCase() + ",";
-      }, "");
+      let days: string = this.daysOfWeek.reduce(
+        (acc: string, curr: string): string => {
+          return acc + curr.substring(0, 2).toUpperCase() + ",";
+        },
+        ""
+      );
       newEvent["recurrenceRule"] = "FREQ=WEEKLY;BYDAY=" + days + ";INTERVAL=1";
     }
-    
+
     context.push(newEvent);
   }
 
-  nameCheck(): void {
-    // TODO
+  nameCheck(map: any): void {
+    // namecheck guest
+    this.guests.forEach(guest => {
+      if (!map.hasOwnProperty(guest)) {
+        throw new NameCheckError(
+          `Guest with identifier ${guest} is not defined.`,
+          this.lineNumber
+        );
+      }
+    });
+
+    // namecheck location
+    if (this.location !== "" && !map.hasOwnProperty(this.location)) {
+      throw new NameCheckError(
+        `Event location with identifier ${this.location} is not defined.`,
+        this.lineNumber
+      );
+    }
   }
 
-  typeCheck(): void {
+  typeCheck(map: any): void {
+    // typecheck days of the week
     this.daysOfWeek.forEach(dayOfWeek => {
       if (!Event.validDays.includes(dayOfWeek)) {
         throw new TypeCheckError(
@@ -168,5 +208,37 @@ export default class Event extends Node {
         );
       }
     });
+
+    // typecheck guests
+    if (this.guests.length) {
+      this.guests.forEach(guest => {
+        const guestMapValue = map[guest];
+
+        if (!(guestMapValue[0] === "Guest")) {
+          throw new TypeCheckError(
+            {
+              expected: `${guest} to be a valid Guest`,
+              actual: guestMapValue[0]
+            },
+            this.lineNumber
+          );
+        }
+      });
+    }
+
+    // typecheck location
+    if (this.location) {
+      const locationMapValue = map[this.location];
+
+      if (!(locationMapValue[0] === "Location")) {
+        throw new TypeCheckError(
+          {
+            expected: `${this.location} to be a valid Location`,
+            actual: locationMapValue[0]
+          },
+          this.lineNumber
+        );
+      }
+    }
   }
 }
