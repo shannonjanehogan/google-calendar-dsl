@@ -179,7 +179,7 @@ export default class Event extends Node {
           name: map[guest][1],
           email: map[guest][2],
           role: "REQ-PARTICIPANT"
-        }
+        };
         attendees.push(attendee);
       });
       newEvent["attendees"] = attendees;
@@ -213,6 +213,39 @@ export default class Event extends Node {
   }
 
   typeCheck(map: any): void {
+    // typecheck date
+    if (this.date && !moment(this.date, "MMMM D, YYYY").isValid()) {
+      throw new TypeCheckError(
+        {
+          expected: "a valid date",
+          actual: this.date
+        },
+        this.lineNumber
+      );
+    }
+
+    // typecheck fromTime
+    if (this.fromTime && !moment(this.fromTime, "hh:mm").isValid()) {
+      throw new TypeCheckError(
+        {
+          expected: "a valid start time",
+          actual: this.fromTime
+        },
+        this.lineNumber
+      );
+    }
+
+    // typecheck toTime
+    if (this.toTime && !moment(this.toTime, "hh:mm").isValid()) {
+      throw new TypeCheckError(
+        {
+          expected: "a valid end time",
+          actual: this.toTime
+        },
+        this.lineNumber
+      );
+    }
+
     // typecheck days of the week
     this.daysOfWeek.forEach(dayOfWeek => {
       if (!Event.validDays.includes(dayOfWeek)) {
