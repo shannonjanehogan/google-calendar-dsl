@@ -179,7 +179,7 @@ export default class Event extends Node {
           name: map[guest][1],
           email: map[guest][2],
           role: "REQ-PARTICIPANT"
-        }
+        };
         attendees.push(attendee);
       });
       newEvent["attendees"] = attendees;
@@ -214,7 +214,7 @@ export default class Event extends Node {
 
   typeCheck(map: any): void {
     // typecheck date
-    if (!this.repeating && !moment(this.date, "MMMM D, YYYY").isValid()) {
+    if (this.date && !moment(this.date, "MMMM D, YYYY").isValid()) {
       throw new TypeCheckError(
         {
           expected: "a valid date",
@@ -225,7 +225,7 @@ export default class Event extends Node {
     }
 
     // typecheck fromTime
-    if (!moment(this.fromTime, "hh:mm").isValid()) {
+    if (this.fromTime && !moment(this.fromTime, "hh:mm").isValid()) {
       throw new TypeCheckError(
         {
           expected: "a valid start time",
@@ -236,7 +236,7 @@ export default class Event extends Node {
     }
 
     // typecheck toTime
-    if (!moment(this.toTime, "hh:mm").isValid()) {
+    if (this.toTime && !moment(this.toTime, "hh:mm").isValid()) {
       throw new TypeCheckError(
         {
           expected: "a valid end time",
