@@ -3,6 +3,7 @@ import Tokenizer from "../Tokenizer";
 import { ParserError } from "../errors/ParserError";
 import { TokenKeywords } from "../TokenKeywords";
 import { NameCheckError } from "../errors/NameCheckError";
+import { TypeCheckError } from "../errors/TypeCheckError";
 
 export default class Guest extends Node {
   id: string = "";
@@ -65,6 +66,18 @@ export default class Guest extends Node {
   }
 
   typeCheck(map: any): void {
+    // typecheck email
+    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (!this.email.match(emailRegex)) {
+      throw new TypeCheckError(
+        {
+          expected: "a valid email",
+          actual: this.email
+        },
+        this.lineNumber
+      );
+    }
+
     if (!map.hasOwnProperty(this.id))
       throw new Error("Map doesn't contain Guest.");
     map[this.id][0] = "Guest";
