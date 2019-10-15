@@ -16,12 +16,12 @@ EVENT		::=	“STRING [“every” DAYOFWEEK (“and” DAYOFWEEK)*|“on” DATE
                         [“all day”|”from” TIME to TIME] (“at” STRING)?
                         (“with” STRING (“and” STRING)*)?
 DATE		::=	MM DD, YYYY
-TIME		::= hh:mm
+TIME		::=     hh:mm
 DAYOFWEEK 	::=	[“Sunday”|“Monday”|“Tuesday”|“Wednesday”|“Thursday”|
                           “Friday”|“Saturday”]
 GUESTS	        ::=	“Guests:” [GUEST]+
 GUEST		::=	STRING is STRING with EMAIL
-EMAIL 	        ::= STRING\@STRING.STRING
+EMAIL 	        ::=     STRING\@STRING.STRING
 LOCATIONS	::=	“Locations:” [LOCATION]+
-LOCATION	::= STRING: STRING
+LOCATION	::=     STRING: STRING
 ```
